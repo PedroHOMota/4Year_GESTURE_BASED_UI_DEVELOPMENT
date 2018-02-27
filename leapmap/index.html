@@ -37,13 +37,36 @@
 </head>
 
 <body class="nav-md">
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title" id="myModalLabel">How to Use Leap Motion</h4>
+        </div>
+        <div class="modal-body" align="center">
+            <img src="images/leapHand.png" alt="LeapMotion" />
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
   <div class="container body">
     <div class="main_container">
       <div class="col-md-3 left_col">
         <div class="left_col scroll-view">
           <div class="navbar nav_title" style="border: 0;">
             <a href="index.html" class="site_title">
-              <i class="fa fa-paw"></i>
+              <i class="fa fa-thumbs-up"></i>
               <span>Leap Map</span>
             </a>
           </div>
@@ -74,8 +97,8 @@
                       <a href="index.html">3D</a>
                     </li>
                     <li>
-                        <a href="index.html">Satellite</a>
-                      </li>
+                      <a href="index.html">Satellite</a>
+                    </li>
                   </ul>
                 </li>
               </ul>
@@ -114,8 +137,12 @@
 
           <!-- /menu footer buttons -->
           <div class="sidebar-footer hidden-small">
+
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary btn-small glyphicon glyphicon-question-sign" data-toggle="modal" data-target="#myModal"></button>
+            <br>
             <small> Project for Gesture Based UI Development </small>
-            
+
           </div>
           <!-- /menu footer buttons -->
         </div>
