@@ -1,8 +1,15 @@
 .canvas_size {
     margin: 0;
     padding: 0;
-    width: 100;
-    height: 700px
+    width: 100%;
+    height: 100%
+}
+
+.x_content,
+table.tile td ul li a,
+table.tile_info {
+    width: 100%;
+    height: 90vh
 }
 
 .x_title h2,
@@ -1287,11 +1294,7 @@ h2 {
     float: right
 }
 
-.x_content,
-table.tile td ul li a,
-table.tile_info {
-    width: 100%
-}
+
 
 .x_title h2 {
     margin: 5px 0 6px;
