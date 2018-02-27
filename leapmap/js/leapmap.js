@@ -207,3 +207,7 @@ function isClockwise(frame, gesture) {
     return clockwise;
 }
 google.maps.event.addDomListener(window, 'load', initialize);
+
+// AIzaSyB1ptIqxvZLpayWsSscOgup_6CcRHNSACM
+ 
+ 
