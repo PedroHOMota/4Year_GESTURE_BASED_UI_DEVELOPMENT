@@ -10,39 +10,36 @@ var X = 0,
     Z = 2;
 
 function move(frame) {
-    // Look for any circle gestures and process the zoom
-    // TODO: filter out multiple circle gestures per frame
     if (frame.valid && frame.gestures.length > 0) {
         frame.gestures.forEach(function (gesture) {
             filterGesture("circle", zoom)(frame, gesture);
         });
     }
     markHands(frame);
-    // if there is one hand grabbing...
+    
     if (frame.hands.length > 0 && isGripped(frame.hands[LEFT_HAND])) {
         var leftHand = frame.hands[LEFT_HAND];
         var rightHand = frame.hands.length > 1 ? frame.hands[RIGHT_HAND] : undefined;
         var separation;
 
-        // If there was no previous closed position, capture it and exit
+        
         if (leftHandPrev == null) {
             leftHandPrev = leftHand;
             return;
         }
-        // if there is a right hand and its gripped...
+        
         if (rightHand) {
             if (isGripped(rightHand)) {
                 separation = Math.sqrt(
                     Math.pow(rightHand.stabilizedPalmPosition[X] - leftHand.stabilizedPalmPosition[X], 2) +
                     Math.pow(rightHand.stabilizedPalmPosition[Y] - leftHand.stabilizedPalmPosition[Y], 2)
                 );
-                // console.log("separation = " + separation + " ("+separationStart+")");
-                // ...and no previous separation, capture and exit
+                
                 if (separationStart == null) {
                     separationStart = separation;
                     return;
                 }
-                // Calculate if we need to change the zoom level
+                
                 var currentZoom = map.getZoom();
                 if (currentZoom > 1 && separation < (separationStart / SEPARATION_SCALING)) {
                     map.setZoom(currentZoom - 1);
@@ -51,34 +48,34 @@ function move(frame) {
                     map.setZoom(currentZoom + 1);
                     separationStart = separation;
                 }
-                // If the right hand is not gripped...
+            
             } else if (separationStart != null) {
                 separationStart = null;
             }
         }
-        // Calculate how much the hand moved
+       
         var dX = leftHandPrev.stabilizedPalmPosition[X] - leftHand.stabilizedPalmPosition[X];
         var dY = leftHandPrev.stabilizedPalmPosition[Y] - leftHand.stabilizedPalmPosition[Y];
-        // console.log("Movement: " + dX + ","+dY);
+        
         var center = map.getCenter();
         var scaling = 4.0 / Math.pow(2, map.getZoom() - 1);
         var newLat = center.lat() + dY * scaling;
         var newLng = center.lng() + dX * scaling;
         var newCenter = new google.maps.LatLng(newLat, newLng);
 
-        // console.log(newCenter)
+        
         map.setCenter(newCenter);
         leftHandPrev = leftHand;
     } else {
-        // If the left hand is not in a grab position, clear the last hand position
+        
         if (frame.hands.length > LEFT_HAND && !isGripped(frame.hands[LEFT_HAND]) && leftHandPrev != null) {
             leftHandPrev = null;
         }
-        // if the right hand is not in a grab position, clear the separation
+        
         if (frame.hands.length > RIGHT_HAND && !isGripped(frame.hands[RIGHT_HAND]) && separationStart != null) {
             separationStart = null;
         }
-        // console.log("Clearing lastHand");
+
     }
 }
 var handMarkers = [];
@@ -86,61 +83,58 @@ var HEIGHT_OFFSET = 150;
 var BASE_MARKER_SIZE_GRIPPED = 350000,
     BASE_MARKER_SIZE_UNGRIPPED = 500000;
 
-function markHands(frame) {
-    var scaling = (4.0 / Math.pow(2, map.getZoom() - 1));
-    var bounds = map.getBounds();
-    // FIXME: Sometimes this gets run too early, just exit if its too early.
-    if (!bounds) {
-        return;
-    }
-    var origin = new google.maps.LatLng(bounds.getSouthWest().lat(), bounds.getCenter().lng());
-    var hands = frame.hands;
-    for (var i in hands) {
-        if (hands.hasOwnProperty(i)) {
-            // Limit this to 2 hands for now
-            if (i > RIGHT_HAND) {
-                return;
+    function markHands(frame) {
+        var scaling = (4.0 / Math.pow(2, map.getZoom() - 1));
+        var bounds = map.getBounds();
+        // FIXME: Sometimes this gets run too early, just exit if its too early.
+        if (!bounds) {
+            return;
+        }
+        var origin = new google.maps.LatLng(bounds.getSouthWest().lat(), bounds.getCenter().lng());
+        var hands = frame.hands;
+        for (var i in hands) {
+            if (hands.hasOwnProperty(i)) {
+                //Check if there is more than 2 hands, if yes, do not handle the extras
+                if (i > 1) {
+                    return;
+                }
+                var hand = hands[i];
+                newCenter = new google.maps.LatLng(origin.lat() + ((hand.stabilizedPalmPosition[1] - HEIGHT_OFFSET) *
+                    scaling), origin.lng() + (hand.stabilizedPalmPosition[0] * scaling));
+                var gripped = isGripped(hand);
+                var baseRadius = gripped ? BASE_MARKER_SIZE_GRIPPED : BASE_MARKER_SIZE_UNGRIPPED;
+                var handColor = getHandColor(hand);
+                var handMarker = handMarkers[i];
+                if (!handMarker) {
+                    handMarker = new google.maps.Marker();
+                    handMarker.setOptions({
+                        position: newCenter,
+                        icon: 'https://maps.google.com/mapfiles/kml/shapes/parking_lot_maps.png',
+                        map: map
+                     
+                    });
+                    handMarkers[i] = handMarker;
+                }
+               handMarker.setOptions({
+                   position : newCenter
+                });
             }
-            var hand = hands[i];
-            newCenter = new google.maps.LatLng(origin.lat() + ((hand.stabilizedPalmPosition[1] - HEIGHT_OFFSET) *
-                scaling), origin.lng() + (hand.stabilizedPalmPosition[0] * scaling));
-            // console.log(center.lat() + "," + center.lng());
-            // console.log(newCenter.lat() + "," + newCenter.lng());
-            var gripped = isGripped(hand);
-            var baseRadius = gripped ? BASE_MARKER_SIZE_GRIPPED : BASE_MARKER_SIZE_UNGRIPPED;
-            var handColor = getHandColor(hand);
-            var handMarker = handMarkers[i];
-            if (!handMarker) {
-                handMarker = new google.maps.Circle();
-                handMarkers[i] = handMarker;
-            }
-            handMarker.setOptions({
-                strokeColor: handColor,
-                strokeOpacity: 0.8,
-                strokeWeight: 2,
-                fillColor: handColor,
-                fillOpacity: 0.35,
-                map: map,
-                center: newCenter,
-                radius: baseRadius * scaling
-            });
         }
     }
-}
 var zoomLevelAtCircleStart;
 var INDEX_FINGER = 1;
 
 function zoom(frame, circleGesture) {
-    // Only zoom based on one index finger
+    
     if (circleGesture.pointableIds.length == 1 &&
         frame.pointable(circleGesture.pointableIds[0]).type == INDEX_FINGER) {
         switch (circleGesture.state) {
             case "start":
                 zoomLevelAtCircleStart = map.getZoom();
-                // fall through on purpose...
+            
             case "update":
-                // figure out if we need to change the zoom level;
-                var zoomChange = Math.floor(circleGesture.progress);
+                
+            var zoomChange = Math.floor(circleGesture.progress);
                 var currentZoom = map.getZoom();
                 var zoomDirection = isClockwise(frame, circleGesture) ? zoomChange : -zoomChange;
                 if (zoomLevelAtCircleStart + zoomDirection != currentZoom) {
@@ -168,14 +162,13 @@ function initialize() {
     };
     map = new google.maps.Map(document.getElementById('map-canvas'),
         mapOptions);
-    // listen to Leap Motion
+   
+    //Leap setup
     Leap.loop({
         enableGestures: true
     }, move);
 }
-// ==== utility functions =====
-/** Returns the truth that a Leap Motion API Hand object is currently in a gripped or "grabbed" state.
- */
+
 function isGripped(hand) {
     return hand.grabStrength == 1.0;
 }
