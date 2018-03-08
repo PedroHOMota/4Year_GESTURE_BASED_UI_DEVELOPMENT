@@ -18,7 +18,6 @@ function move(frame)
             filterGesture("circle", zoom)(frame, gesture);
         });
     }
-<<<<<<< HEAD
 
     drawHands(frame);
     //Checando primeiro mao esquerda, pois o id da mesma é 0, se houver alguma mao detectada
@@ -40,35 +39,13 @@ function move(frame)
         {
             if (isGripped(rightHand)) 
             {
-=======
-    markHands(frame);
-
-    if (frame.hands.length > 0 && isGripped(frame.hands[LEFT_HAND])) {
-        var leftHand = frame.hands[LEFT_HAND];
-        var rightHand = frame.hands.length > 1 ? frame.hands[RIGHT_HAND] : undefined;
-        var separation;
-
-
-        if (leftHandPrev == null) {
-            leftHandPrev = leftHand;
-            return;
-        }
-
-        if (rightHand) {
-            if (isGripped(rightHand)) {
->>>>>>> 8924efe8a1cac3f1a3a8ad582003bc81620ecae1
                 separation = Math.sqrt(
                     Math.pow(rightHand.stabilizedPalmPosition[X] - leftHand.stabilizedPalmPosition[X], 2) +
                     Math.pow(rightHand.stabilizedPalmPosition[Y] - leftHand.stabilizedPalmPosition[Y], 2)
                 );
-<<<<<<< HEAD
                 
                 if (separationStart == null)
                  {
-=======
-
-                if (separationStart == null) {
->>>>>>> 8924efe8a1cac3f1a3a8ad582003bc81620ecae1
                     separationStart = separation;
                     return;
                 }
@@ -84,15 +61,10 @@ function move(frame)
                     map.setZoom(currentZoom + 1);
                     separationStart = separation;
                 }
-<<<<<<< HEAD
             
             } 
             else if (separationStart != null)
             {
-=======
-
-            } else if (separationStart != null) {
->>>>>>> 8924efe8a1cac3f1a3a8ad582003bc81620ecae1
                 separationStart = null;
             }
         }
@@ -109,7 +81,6 @@ function move(frame)
 
         map.setCenter(newCenter);
         leftHandPrev = leftHand;
-<<<<<<< HEAD
     } 
     else 
     {
@@ -118,15 +89,6 @@ function move(frame)
         }
         
         if (frame.hands.length > constRightHand && !isGripped(frame.hands[constRightHand]) && separationStart != null) {
-=======
-    } else {
-
-        if (frame.hands.length > LEFT_HAND && !isGripped(frame.hands[LEFT_HAND]) && leftHandPrev != null) {
-            leftHandPrev = null;
-        }
-
-        if (frame.hands.length > RIGHT_HAND && !isGripped(frame.hands[RIGHT_HAND]) && separationStart != null) {
->>>>>>> 8924efe8a1cac3f1a3a8ad582003bc81620ecae1
             separationStart = null;
         }
 
@@ -136,8 +98,8 @@ function move(frame)
 var handMarkers = [];
 var HEIGHT_OFFSET = 150;
 
-<<<<<<< HEAD
-    function drawHands(frame) {
+    function drawHands(frame) 
+    {
         var scaling = (4.0 / Math.pow(2, map.getZoom() - 1));
         var bounds = map.getBounds();
         
@@ -157,7 +119,7 @@ var HEIGHT_OFFSET = 150;
                 newCenter = new google.maps.LatLng(origin.lat() + ((hand.stabilizedPalmPosition[1] - HEIGHT_OFFSET) *
                     scaling), origin.lng() + (hand.stabilizedPalmPosition[0] * scaling));
                 
-                var handIcon = isGripped(hand);
+                var handIcon = getHandIcon(hand);
                 var handMarker = handMarkers[i];
                 
                 if (!handMarker)
@@ -175,37 +137,6 @@ var HEIGHT_OFFSET = 150;
                handMarker.setOptions({
                    position : newCenter,
                    icon: handIcon
-=======
-function markHands(frame) {
-    var scaling = (4.0 / Math.pow(2, map.getZoom() - 1));
-    var bounds = map.getBounds();
-    // FIXME: Sometimes this gets run too early, just exit if its too early.
-    if (!bounds) {
-        return;
-    }
-    var origin = new google.maps.LatLng(bounds.getSouthWest().lat(), bounds.getCenter().lng());
-    var hands = frame.hands;
-    for (var i in hands) {
-        if (hands.hasOwnProperty(i)) {
-            //Check if there is more than 2 hands, if yes, do not handle the extras
-            if (i > 1) {
-                return;
-            }
-            var hand = hands[i];
-            newCenter = new google.maps.LatLng(origin.lat() + ((hand.stabilizedPalmPosition[1] - HEIGHT_OFFSET) *
-                scaling), origin.lng() + (hand.stabilizedPalmPosition[0] * scaling));
-            var gripped = isGripped(hand);
-            var baseRadius = gripped ? BASE_MARKER_SIZE_GRIPPED : BASE_MARKER_SIZE_UNGRIPPED;
-            var handColor = getHandColor(hand);
-            var handMarker = handMarkers[i];
-            if (!handMarker) {
-                handMarker = new google.maps.Marker();
-                handMarker.setOptions({
-                    position: newCenter,
-                    icon: 'https://maps.google.com/mapfiles/kml/shapes/parking_lot_maps.png',
-                    map: map
-
->>>>>>> 8924efe8a1cac3f1a3a8ad582003bc81620ecae1
                 });
                 handMarkers[i] = handMarker;
             }
@@ -214,18 +145,13 @@ function markHands(frame) {
             });
         }
     }
-}
+
 var zoomLevelAtCircleStart;
 var INDEX_FINGER = 1;
 
-<<<<<<< HEAD
 function zoom(frame, circleGesture) 
 {
-    
-=======
-function zoom(frame, circleGesture) {
-
->>>>>>> 8924efe8a1cac3f1a3a8ad582003bc81620ecae1
+    //remove
     if (circleGesture.pointableIds.length == 1 &&
         frame.pointable(circleGesture.pointableIds[0]).type == INDEX_FINGER) 
         {
@@ -268,16 +194,12 @@ function initialize()
     };
     map = new google.maps.Map(document.getElementById('map-canvas'),
         mapOptions);
-<<<<<<< HEAD
    
     //Leap setup using animation frame
-=======
-
-    //Leap setup
->>>>>>> 8924efe8a1cac3f1a3a8ad582003bc81620ecae1
     Leap.loop({
-        enableGestures: true
-    }, move);
+            enableGestures: true
+        }, move);
+    
 }
 
 function isGripped(hand) 
@@ -289,11 +211,11 @@ function getHandIcon(hand)
 {
     if (isGripped(hand)) 
     {
-        return hand.left ? "GrippedLeftHandIcon" : "GrippedRightHandIcon";
+        return hand.isLeft() ? "./images/closedLeftHand.png" : "./images/closedRightHand.png";
     } 
     else 
     {
-        return hand.left ? "LeftHandIcon" : "RightHandIcon";
+        return hand.isLeft() ? "./images/openLeftHand.png" : "./images/openRightHand.png";
     }
 }
 
