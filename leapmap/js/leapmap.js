@@ -2,8 +2,8 @@ var map;
 var leftHandPrev;
 var separationStart;
 var SEPARATION_SCALING = 1.25;
-var constLeftHand = 0, 
-    constRightHand = 1;
+var constLeftHand = 0;
+var constRightHand = 1;
     
 var X = 0,
     Y = 1,
@@ -25,7 +25,7 @@ function move(frame)
     if (frame.hands.length > 0 && isGripped(frame.hands[constLeftHand])) 
     {
         var leftHand = frame.hands[constLeftHand];
-        var rightHand = frame.hands.length > 1 ? frame.hands[constRightHand] : undefined; //Se houver mais de uma mao, nunca retorna undefined
+        //var rightHand = frame.hands.length > 1 ? frame.hands[constRightHand] : undefined; //Se houver mais de uma mao, nunca retorna undefined
         var separation;
 
         
@@ -35,7 +35,7 @@ function move(frame)
             return;
         }
         
-        if (rightHand) 
+        /*if (rightHand) 
         {
             if (isGripped(rightHand)) 
             {
@@ -50,7 +50,7 @@ function move(frame)
                     return;
                 }
 
-                var currentZoom = map.getZoom();
+                /*var currentZoom = map.getZoom();
                 if (currentZoom > 1 && separation < (separationStart / SEPARATION_SCALING)) 
                 {
                     map.setZoom(currentZoom - 1);
@@ -60,14 +60,14 @@ function move(frame)
                 {
                     map.setZoom(currentZoom + 1);
                     separationStart = separation;
-                }
+                }*/
             
-            } 
-            else if (separationStart != null)
+            //} */
+            /*else if (separationStart != null)
             {
                 separationStart = null;
-            }
-        }
+            }*/
+        //}
 
         var dX = leftHandPrev.stabilizedPalmPosition[X] - leftHand.stabilizedPalmPosition[X];
         var dY = leftHandPrev.stabilizedPalmPosition[Y] - leftHand.stabilizedPalmPosition[Y];
@@ -112,7 +112,7 @@ var HEIGHT_OFFSET = 150;
         for (var i in hands) {
             if (hands.hasOwnProperty(i)) {
                 //Check if there is more than 2 hands, if yes, do not handle the extras
-                if (i > 1) {
+                if (i > 0) {
                     return;
                 }
                 var hand = hands[i];
@@ -211,11 +211,13 @@ function getHandIcon(hand)
 {
     if (isGripped(hand)) 
     {
-        return hand.isLeft() ? "./images/closedLeftHand.png" : "./images/closedRightHand.png";
+        return "./images/closedHand.png";
+        //return hand.isLeft ? "./images/closedLeftHand.png" : "./images/closedRightHand.png";
     } 
     else 
     {
-        return hand.isLeft() ? "./images/openLeftHand.png" : "./images/openRightHand.png";
+        return "./images/openHand.png";
+        //return hand.isLeft ? "./images/openLeftHand.png" : "./images/openRightHand.png";
     }
 }
 
