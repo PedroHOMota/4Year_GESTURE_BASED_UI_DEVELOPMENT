@@ -211,11 +211,11 @@ function getHandIcon(hand)
 {
     if (isGripped(hand)) 
     {
-        return hand.isLeft() ? "./images/closedLeftHand.png" : "./images/closedRightHand.png";
+        return hand.isLeft ? "./images/closedLeftHand.png" : "./images/closedRightHand.png";
     } 
     else 
     {
-        return hand.isLeft() ? "./images/openLeftHand.png" : "./images/openRightHand.png";
+        return hand.isLeft ? "./images/openLeftHand.png" : "./images/openRightHand.png";
     }
 }
 
