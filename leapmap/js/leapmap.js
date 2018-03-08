@@ -127,7 +127,7 @@ var HEIGHT_OFFSET = 150;
                     handMarker = new google.maps.Marker();
                     handMarker.setOptions({
                         position: newCenter,
-                        icon: handIcon, //'https://maps.google.com/mapfiles/kml/shapes/parking_lot_maps.png',
+                        icon: handIcon,
                         map: map
                      
                     });
@@ -243,4 +243,46 @@ function isClockwise(frame, gesture)
 }
 google.maps.event.addDomListener(window, 'load', initialize);
 
+function ChangeMap(op)
+{
+    switch(op)
+    {
+        case "hybrid":
+        {
+            map.setOptions({
+                mapTypeId: google.maps.MapTypeId.HYBRID
+            });
+            break;
+        }
+        case "roadmap":
+        {
+            map.setOptions({
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            });
+            break;
+        }
+        case "satellite":
+        {
+            map.setOptions({
+                mapTypeId: google.maps.MapTypeId.SATELLITE
+            });
+            break;
+        }
+        case "terrain":
+        {
+            map.setOptions({
+                mapTypeId: google.maps.MapTypeId.TERRAIN
+            });
+            break;
+        }
+    }
+}
+
+function NewPositionMap(lat,long)
+{
+    map.setOptions({
+        zoom: 8,
+        center: new google.maps.LatLng(lat, long)
+    });
+}
 // AIzaSyB1ptIqxvZLpayWsSscOgup_6CcRHNSACM
