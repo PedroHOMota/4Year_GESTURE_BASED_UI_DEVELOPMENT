@@ -278,11 +278,32 @@ function ChangeMap(op)
     }
 }
 
-function NewPositionMap(lat,long)
+function NewPositionMap(lat,long,zoomMap, contentImg, contentTXT)
 {
     map.setOptions({
-        zoom: 8,
+        zoom: zoomMap,
         center: new google.maps.LatLng(lat, long)
     });
+    
+    var contentString = "<img width='400' src='"+ contentImg + "'>" + "<br><br>" + contentTXT
+
+   // var contentString = "<div><img width='400' src='http://graftonstreet.ie/wp-content/uploads/2013/03/grafton_street_shot1.jpg'</div><br><br> Grafton Street (Irish: Sráid Grafton) is one of the two principal shopping streets in Dublin city centre, the other being Henry Street. It runs from St Stephen's Green in the south to College Green in the north (to the lowest point).";
+
+var infowindow = new google.maps.InfoWindow({
+  content: contentString,
+  maxWidth: 400
+});
+
+
+    var marker = new google.maps.Marker({
+        animation: google.maps.Animation.DROP,
+        position: new google.maps.LatLng(lat, long),
+        map: map
+      });
+
+      marker.addListener('click', function() {
+        infowindow.open(map, marker);
+      });
 }
 // AIzaSyB1ptIqxvZLpayWsSscOgup_6CcRHNSACM
+
