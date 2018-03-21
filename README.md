@@ -21,7 +21,7 @@ We integrate the two Javascript APIs of Leap Motion, and of Google Maps, which a
 
 ![Screencast](Screencast/leapHand.png)
 
-![Screencast](Screencast/Project.png)
+![Screencast](Screencast/project.gif)
 
 https://leapmapgmit.herokuapp.com/
 
