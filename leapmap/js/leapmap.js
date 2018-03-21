@@ -4,7 +4,8 @@ var separationStart;
 var SEPARATION_SCALING = 1.25;
 var constLeftHand = 0;
 var constRightHand = 1;
-    
+var marker;    
+var infowindow;
 var X = 0,
     Y = 1,
     Z = 2;
@@ -13,9 +14,21 @@ var X = 0,
 function move(frame) 
 {
     //Checks if the leap has finished connecting to the websocket and if any gesture has been made
-    if (frame.valid && frame.gestures.length > 0) {
-        frame.gestures.forEach(function (gesture) {
-            filterGesture("circle", zoom)(frame, gesture);
+    if (frame.valid && frame.gestures.length > 0) 
+    {
+        frame.gestures.forEach(function (gesture) 
+        {
+            switch (gesture.type)
+            {
+                case "circle":
+                    zoom(frame, gesture);
+                    break;
+                case "keyTap":
+                    break;
+                case "screenTap":
+                    closeMarker();
+                    break;
+            }
         });
     }
 
@@ -35,40 +48,6 @@ function move(frame)
             return;
         }
         
-        /*if (rightHand) 
-        {
-            if (isGripped(rightHand)) 
-            {
-                separation = Math.sqrt(
-                    Math.pow(rightHand.stabilizedPalmPosition[X] - leftHand.stabilizedPalmPosition[X], 2) +
-                    Math.pow(rightHand.stabilizedPalmPosition[Y] - leftHand.stabilizedPalmPosition[Y], 2)
-                );
-                
-                if (separationStart == null)
-                 {
-                    separationStart = separation;
-                    return;
-                }
-
-                /*var currentZoom = map.getZoom();
-                if (currentZoom > 1 && separation < (separationStart / SEPARATION_SCALING)) 
-                {
-                    map.setZoom(currentZoom - 1);
-                    separationStart = separation;
-                } 
-                else if (currentZoom < 22 && separation > (SEPARATION_SCALING * separationStart)) 
-                {
-                    map.setZoom(currentZoom + 1);
-                    separationStart = separation;
-                }*/
-            
-            //} */
-            /*else if (separationStart != null)
-            {
-                separationStart = null;
-            }*/
-        //}
-
         var dX = leftHandPrev.stabilizedPalmPosition[X] - leftHand.stabilizedPalmPosition[X];
         var dY = leftHandPrev.stabilizedPalmPosition[Y] - leftHand.stabilizedPalmPosition[Y];
 
@@ -111,7 +90,7 @@ var HEIGHT_OFFSET = 150;
         var hands = frame.hands;
         for (var i in hands) {
             if (hands.hasOwnProperty(i)) {
-                //Check if there is more than 2 hands, if yes, do not handle the extras
+                //Check if there is more than 1 hand, if yes, do not handle the extras
                 if (i > 0) {
                     return;
                 }
@@ -151,7 +130,6 @@ var INDEX_FINGER = 1;
 
 function zoom(frame, circleGesture) 
 {
-    //remove
     if (circleGesture.pointableIds.length == 1 &&
         frame.pointable(circleGesture.pointableIds[0]).type == INDEX_FINGER) 
         {
@@ -212,26 +190,19 @@ function getHandIcon(hand)
     if (isGripped(hand)) 
     {
         return "./images/closedHand.png";
-        //return hand.isLeft ? "./images/closedLeftHand.png" : "./images/closedRightHand.png";
     } 
     else 
     {
         return "./images/openHand.png";
-        //return hand.isLeft ? "./images/openLeftHand.png" : "./images/openRightHand.png";
     }
 }
 
-function filterGesture(gestureType, callback) 
+function closeMarker()
 {
-    return function (frame, gesture) 
-    {
-        if (gesture.type == gestureType) 
-        {
-            callback(frame, gesture);
-        }
-    }
+    //alert("Detectou swipe");
+    //marker.setMap(null);
+    infowindow.close();
 }
-
 function isClockwise(frame, gesture) 
 {
     var clockwise = false;
@@ -289,13 +260,14 @@ function NewPositionMap(lat,long,zoomMap, contentImg, contentTXT)
 
    // var contentString = "<div><img width='400' src='http://graftonstreet.ie/wp-content/uploads/2013/03/grafton_street_shot1.jpg'</div><br><br> Grafton Street (Irish: Sráid Grafton) is one of the two principal shopping streets in Dublin city centre, the other being Henry Street. It runs from St Stephen's Green in the south to College Green in the north (to the lowest point).";
 
-var infowindow = new google.maps.InfoWindow({
-  content: contentString,
-  maxWidth: 400
-});
+    infowindow = new google.maps.InfoWindow
+    ({
+        content: contentString,
+        maxWidth: 400
+    });
 
 
-    var marker = new google.maps.Marker({
+    marker = new google.maps.Marker({
         animation: google.maps.Animation.DROP,
         position: new google.maps.LatLng(lat, long),
         map: map
