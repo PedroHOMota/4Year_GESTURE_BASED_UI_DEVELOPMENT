@@ -72,6 +72,23 @@ function move(frame)
         }
 
     }
+
+    alert(frame.pointable.length); //fingers
+	
+	switch(frame.pointable.length)
+	{
+		case 6:
+		ChangeMap("hybrid");
+		break;
+		ChangeMap("roadmap");
+		case 7:
+		ChangeMap("satellite");
+		break;
+		case 8:
+		ChangeMap("terrain");
+		break;
+	
+	}
 }
 
 var handMarkers = [];
@@ -86,6 +103,7 @@ var HEIGHT_OFFSET = 150;
         {
             return;
         }
+
         var origin = new google.maps.LatLng(bounds.getSouthWest().lat(), bounds.getCenter().lng());
         var hands = frame.hands;
         for (var i in hands) {
