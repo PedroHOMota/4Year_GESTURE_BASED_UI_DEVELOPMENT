@@ -21,9 +21,55 @@ We integrate the two Javascript APIs of Leap Motion, and of Google Maps, which a
 
 ![Screencast](Screencast/leapHand.png)
 
+Using the hands on the device, the user will be able to control the courses on the map.
+
+Some movements are pre-configured in the system, allowing the user to:
+
+- Move the hand back and forth to close the popups;
+- Open hand, move the cursor on the screen;
+- Hand closed, mapping the map;
+- Circular movements, zoom in and zoom out.
+
+### Samples
+Close the popups.
+
+![Screencast](Screencast/ClosePopup.gif)
+
+Navigate the map and control the zoom.
+
+![Screencast](Screencast/MoveMap.gif)
+
 ![Screencast](Screencast/project.gif)
 
-https://leapmapgmit.herokuapp.com/
+### Online at the following address.
+## https://leapmapgmit.herokuapp.com/
+
+## Technology
+
+### Bootstrap
+Bootstrap is an open source toolkit for developing with HTML, CSS, and JS. Quickly prototype your ideas or build your entire app with our Sass variables and mixins, responsive grid system, extensive prebuilt components, and powerful plugins built on jQuery.
+
+```html
+  <!-- Bootstrap -->
+  <link href="vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+```
+
+### Leap Motion - JS
+
+This library aids manipulation of 2d surfaces in a 3D world. It depends on THREE.js and LeapJS. This is accomplished with a minimal API, no physics engine dependencies
+
+With leap-widgets.js, two classes are added to the window namespace: InteractablePlane, and PushButton. Also a plugin named proximity is made available, which allows detection between either line segments and plane segments, or points and spheres.
+
+This library expects Leap Motion and your THREE.js scene to be both in the same uniting system: meters. This effects things like collision detection (requiring same units) and some sane defaults (such as how far a button depresses).
+
+See the demos below for how to set this up in a couple of lines.
+
+```html
+  <!-- Leap Motion - JS -->
+  <script src="https://js.leapmotion.com/leap-0.6.0.min.js"></script>
+  <script src="https://js.leapmotion.com/leap-plugins-0.1.6.js"></script>
+  <script src="https://js.leapmotion.com/leap.rigged-hand-0.1.4.min.js"></script>
+```
 
 # Authors
 
