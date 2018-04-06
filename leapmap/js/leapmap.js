@@ -73,7 +73,7 @@ function move(frame)
 
     }
 
-    alert(frame.pointable.length); //fingers
+    //alert(frame.pointable.length); //fingers
 	
 	switch(frame.pointable.length)
 	{
