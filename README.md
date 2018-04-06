@@ -21,10 +21,87 @@ We integrate the two Javascript APIs of Leap Motion, and of Google Maps, which a
 
 ![Screencast](Screencast/leapHand.png)
 
+Using the hands on the device, the user will be able to control the courses on the map.
+
+Some movements are pre-configured in the system, allowing the user to:
+
+- Move the hand back and forth to close the popups;
+- Open hand, move the cursor on the screen;
+- Hand closed, mapping the map;
+- Circular movements, zoom in and zoom out.
+
+### Samples
+Close the popups.
+
+![Screencast](Screencast/ClosePopup.gif)
+
+Navigate the map and control the zoom.
+
+![Screencast](Screencast/MoveMap.gif)
+
 ![Screencast](Screencast/project.gif)
 
-https://leapmapgmit.herokuapp.com/
+### Online at the following address.
+## https://leapmapgmit.herokuapp.com/
 
+## Technology
+
+### Bootstrap
+Bootstrap is an open source toolkit for developing with HTML, CSS, and JS. Quickly prototype your ideas or build your entire app with our Sass variables and mixins, responsive grid system, extensive prebuilt components, and powerful plugins built on jQuery.
+
+```html
+  <!-- Bootstrap -->
+  <link href="vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+```
+
+### Leap Motion - JS
+
+LeapJS is a library that aids manipulation of 2d surfaces in a 3D world. This is accomplished with a minimal API, no physics engine dependencies.
+
+LeapJS works by connecting to a websocket server running locally through the Leap Service. As often as every 10ms, the service sends a frame over the websocket and to the open page. This frame is a blob of JSON data including the positions of hands and fingers.
+
+This library expects Leap Motion and your THREE.js scene to be both in the same uniting system: meters. This effects things like collision detection (requiring same units) and some sane defaults (such as how far a button depresses).
+
+See the demos below for how to set this up in a couple of lines.
+
+```html
+  <!-- Leap Motion - JS -->
+  <script src="https://js.leapmotion.com/leap-0.6.0.min.js"></script>
+  <script src="https://js.leapmotion.com/leap-plugins-0.1.6.js"></script>
+  <script src="https://js.leapmotion.com/leap.rigged-hand-0.1.4.min.js"></script>
+```
+#### Drawing Hands
+To draw hands on the map, since its a 2D map, we take only XY values of the hand's palm on the current frame, scale accordingly to map's zoom, add to origin's latitude and longitude. Doing so, the position in the map to draw the hand is obtained. We then use a built-in fuction of google map's api that allows drawing custom markers on the map to draw the hand icon on the newly obtained latitude and logitude.
+```js
+newCenter = new google.maps.LatLng(origin.lat() + (hand.stabilizedPalmPosition[1]  *
+                    scaling), origin.lng() + (hand.stabilizedPalmPosition[0] * scaling));
+
+handMarker = new google.maps.Marker();
+                    handMarker.setOptions({
+                        position: newCenter,
+                        icon: handIcon,
+                        map: map
+                     
+                    });
+```
+#### Moving the map
+To move the map accordingly, at every frame we check how many pixels the palm moved in relation to the previous and add that to the current center point's latitute and longitude, needing then to only center the map to the newly obtained coordinates.
+
+'''js
+        var dX = leftHandPrev.stabilizedPalmPosition[X] - leftHand.stabilizedPalmPosition[X];
+        var dY = leftHandPrev.stabilizedPalmPosition[Y] - leftHand.stabilizedPalmPosition[Y];
+
+        var center = map.getCenter();
+        var scaling = 4.0 / Math.pow(2, map.getZoom() - 1);
+        var newLat = center.lat() + dY * scaling;
+        var newLng = center.lng() + dX * scaling;
+        var newCenter = new google.maps.LatLng(newLat, newLng);
+
+
+        map.setCenter(newCenter);
+        leftHandPrev = leftHand;
+    } 
+'''
 # Authors
 
 ### Alexander Souza
@@ -35,6 +112,6 @@ https://leapmapgmit.herokuapp.com/
 - www.linkedin.com/in/alexander-souza-3a841539/
 
 ### Pedro
-- @gmit.ie
-- https://github.com/
-- www.linkedin.com/in//
+- phomota@hotmail.com
+- https://github.com/PedroHOMota
+- www.linkedin.com/in/pedro-henrique-de-oliveira-mota-162307143/
