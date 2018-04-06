@@ -87,7 +87,7 @@ handMarker = new google.maps.Marker();
 #### Moving the map
 To move the map accordingly, at every frame we check how many pixels the palm moved in relation to the previous and add that to the current center point's latitute and longitude, needing then to only center the map to the newly obtained coordinates.
 
-'''js
+```js
         var dX = leftHandPrev.stabilizedPalmPosition[X] - leftHand.stabilizedPalmPosition[X];
         var dY = leftHandPrev.stabilizedPalmPosition[Y] - leftHand.stabilizedPalmPosition[Y];
 
@@ -101,7 +101,7 @@ To move the map accordingly, at every frame we check how many pixels the palm mo
         map.setCenter(newCenter);
         leftHandPrev = leftHand;
     } 
-'''
+```
 # Authors
 
 ### Alexander Souza
