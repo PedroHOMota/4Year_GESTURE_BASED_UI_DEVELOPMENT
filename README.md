@@ -124,6 +124,7 @@ To move the map accordingly, at every frame we check how many pixels the palm mo
 - www.linkedin.com/in/alexander-souza-3a841539/
 
 ### Pedro Mota
+- G00342002@gmit.ie
 - phomota@hotmail.com
 - https://github.com/PedroHOMota
 - www.linkedin.com/in/pedro-henrique-de-oliveira-mota-162307143/
