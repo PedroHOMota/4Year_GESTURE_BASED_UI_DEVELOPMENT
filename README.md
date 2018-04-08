@@ -106,6 +106,14 @@ To move the map accordingly, at every frame we check how many pixels the palm mo
         leftHandPrev = leftHand;
     } 
 ```
+
+## References
+- [Bootstrap](https://getbootstrap.com/)
+- [LEAPJS](https://github.com/leapmotion/leapjs)
+- [JavaScript SDK Documentation](https://developer.leapmotion.com/documentation/javascript/index.html)
+- [Heroku](https://www.heroku.com/)
+
+
 # Authors
 
 ### Alexander Souza
@@ -115,7 +123,7 @@ To move the map accordingly, at every frame we check how many pixels the palm mo
 - https://github.com/alexpt2000
 - www.linkedin.com/in/alexander-souza-3a841539/
 
-### Pedro
+### Pedro Mota
 - phomota@hotmail.com
 - https://github.com/PedroHOMota
 - www.linkedin.com/in/pedro-henrique-de-oliveira-mota-162307143/
