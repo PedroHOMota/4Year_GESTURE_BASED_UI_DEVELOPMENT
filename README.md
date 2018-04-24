@@ -1,4 +1,7 @@
 # 4 Year  GESTURE BASED UI DEVELOPMENT
+### Online at the following address.
+![Screencast](Screencast/herokup.png)
+## https://leapmapgmit.herokuapp.com/
 
 ## Overview
 The Leap Motion system recognizes and tracks hands and fingers. The device operates in an intimate proximity with high precision and tracking frame rate and reports discrete positions and motion.
@@ -42,6 +45,7 @@ Navigate the map and control the zoom.
 ![Screencast](Screencast/project.gif)
 
 ### Online at the following address.
+![Screencast](Screencast/heroku.png)
 ## https://leapmapgmit.herokuapp.com/
 
 ## Technology
@@ -102,6 +106,14 @@ To move the map accordingly, at every frame we check how many pixels the palm mo
         leftHandPrev = leftHand;
     } 
 ```
+
+## References
+- [Bootstrap](https://getbootstrap.com/)
+- [LEAPJS](https://github.com/leapmotion/leapjs)
+- [JavaScript SDK Documentation](https://developer.leapmotion.com/documentation/javascript/index.html)
+- [Heroku](https://www.heroku.com/)
+
+
 # Authors
 
 ### Alexander Souza
@@ -111,7 +123,8 @@ To move the map accordingly, at every frame we check how many pixels the palm mo
 - https://github.com/alexpt2000
 - www.linkedin.com/in/alexander-souza-3a841539/
 
-### Pedro
+### Pedro Mota
+- G00342002@gmit.ie
 - phomota@hotmail.com
 - https://github.com/PedroHOMota
 - www.linkedin.com/in/pedro-henrique-de-oliveira-mota-162307143/
