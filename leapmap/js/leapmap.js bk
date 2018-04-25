@@ -145,7 +145,6 @@ var HEIGHT_OFFSET = 150;
 
 var zoomLevelAtCircleStart;
 var INDEX_FINGER = 1;
-var tid = -1;
 
 function zoom(frame, circleGesture) 
 {
@@ -178,78 +177,24 @@ function zoom(frame, circleGesture)
     }
 }
 
-var streetView=false;
-var links;
-var panoIsMoving = false;
-
-function initMap(str)
-{
-    if(str)
-    {
-        var fenway = new google.maps.LatLng(53.277024, -9.061486);
-        // Note: constructed panorama objects have visible: true
-        // set by default.
-        var panoOptions = {
-            position: fenway,
-            addressControlOptions: {
-                position: google.maps.ControlPosition.BOTTOM_CENTER
-            },
-            
-            zoomControlOptions: {
-                style: google.maps.ZoomControlStyle.SMALL
-            },
-            enableCloseButton: false
-        };
-        map = new google.maps.StreetViewPanorama(
-                document.getElementById('map-canvas'), panoOptions);
-        
-        map.addListener('links_changed', function() 
-        {
-            links = map.getLinks();
-        });
-    }
-    else
-    {
-        var mapOptions = {
-            zoom: 8,
-            center: new google.maps.LatLng(53.2784669, -9.0107282),
-            mapTypeId: google.maps.MapTypeId.ROADMAP,
-            mapTypeControlOptions: 
-            {
-                position: google.maps.ControlPosition.TOP_LEFT
-            }
-        };
-        
-        map = new google.maps.Map(document.getElementById('map-canvas'),
-            mapOptions);
-    }
-}
 function initialize() 
 {
-    initMap(streetView);
+    var mapOptions = {
+        zoom: 8,
+        center: new google.maps.LatLng(53.2784669, -9.0107282),
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        mapTypeControlOptions: 
+        {
+            position: google.maps.ControlPosition.TOP_LEFT
+        }
+    };
+    map = new google.maps.Map(document.getElementById('map-canvas'),
+        mapOptions);
    
     //Leap setup using animation frame
     Leap.loop({
             enableGestures: true
-        }, 
-        function (frame) 
-        {
-            if(frame.pointables.length==10)
-            {
-                streetView= !streetView;
-                initMap(streetView);
-                //setTimeout({},4000);
-            }
-
-            if(streetView)
-            {
-                moveStreetView(frame);
-            }
-            else
-            {
-                move(frame);
-            }
-        });
+        }, move);
     
 }
 
@@ -272,9 +217,9 @@ function getHandIcon(hand)
 
 function closeMarker()
 {
-    try{
+    //alert("Detectou swipe");
+    //marker.setMap(null);
     infowindow.close();
-    }catch(Exception){}
 }
 function isClockwise(frame, gesture) 
 {
@@ -331,6 +276,8 @@ function NewPositionMap(lat,long,zoomMap, contentImg, contentTXT)
     
     var contentString = "<img width='400' src='"+ contentImg + "'>" + "<br><br>" + contentTXT
 
+   // var contentString = "<div><img width='400' src='http://graftonstreet.ie/wp-content/uploads/2013/03/grafton_street_shot1.jpg'</div><br><br> Grafton Street (Irish: Sráid Grafton) is one of the two principal shopping streets in Dublin city centre, the other being Henry Street. It runs from St Stephen's Green in the south to College Green in the north (to the lowest point).";
+
     infowindow = new google.maps.InfoWindow
     ({
         content: contentString,
@@ -348,183 +295,5 @@ function NewPositionMap(lat,long,zoomMap, contentImg, contentTXT)
         infowindow.open(map, marker);
       });
 }
+// AIzaSyB1ptIqxvZLpayWsSscOgup_6CcRHNSACM
 
-function moveStreetView(frame)
-{
-
-    if(frame.hands.length > 0 && isGripped(frame.hands[0]))
-    {
-        // the grabbing controller migrated from leap-map
-        var leftHand = frame.hands[0];
-
-        // If there was no previous closed position, capture it and exit
-        if(leftHandPrev == null) 
-        {
-            leftHandPrev = leftHand;
-            stabilizedPalmPositionAtGripForZ = leftHand.stabilizedPalmPosition[Z];
-            return;
-        }
-
-        // Calculate how much the hand moved
-        var dX = leftHandPrev.stabilizedPalmPosition[X] - leftHand.stabilizedPalmPosition[X];
-        var dY = leftHandPrev.stabilizedPalmPosition[Y] - leftHand.stabilizedPalmPosition[Y];
-
-        var zOffsetFromAtGrip = stabilizedPalmPositionAtGripForZ - leftHand.stabilizedPalmPosition[Z];
-
-        /* we should call a function to change the panorama here */
-        if (dX >= 0){
-            moveClockwise(dX);
-        } else if (dX < 0) {
-            moveCounterClockwise(dX);
-        }
-        
-        processPitch(dY);
-
-        if (zOffsetFromAtGrip >= 20 && panoIsMoving == false){
-            tid = setInterval(function() 
-            { moveLink("up"); 
-        }, 500);
-            panoIsMoving = true;
-        }
-
-        if (zOffsetFromAtGrip < 20){
-            clearInterval(tid);
-            panoIsMoving = false;
-        }
-
-        leftHandPrev = leftHand;
-
-    } 
-    else 
-    {
-        // If the left hand is not in a grab position, clear the last hand position
-        if (frame.hands.length > 0 && !isGripped(frame.hands[0]) && leftHandPrev != null) {
-            leftHandPrev = null;
-            stabilizedPalmPositionAtGripForZ = null;
-            clearInterval(tid);
-            panoIsMoving = false;
-
-
-        }
-
-        // if the right hand is not in a grab position, clear the separation
-        /*if (frame.hands.length > RIGHT_HAND && !isGripped(frame.hands[1]) && separationStart != null) {
-            separationStart = null;
-            // this does literally nothing because we are not doing right hand at all
-        }*/
-    }
-}
-
-/*Handles clockwise movement based on a given magnitude.*/
-function moveClockwise(magnitude) {
-    if (isNaN(magnitude)){
-        return;
-    }
-    processRotation(true, magnitude);
-}
-
-/*Handles counter-clockwise movement based on a given magnitude.*/
-function moveCounterClockwise(magnitude) {
-    if (isNaN(magnitude)){
-        return;
-    }
-    processRotation(false, 0 - magnitude);
-}
-
-/*Function to change the rotation of the panorama*/
-function processRotation(direction, magnitude) 
-{
-    calls =+ 1;
-    if (calls == 1) 
-    {
-        if (direction == false) 
-        {
-
-            var newHeading = (map.pov.heading - magnitude);
-	    
-	    //Adjust heading to be positive.
-            if (newHeading < 0)
-            {
-		        newHeading += 360;
-            }
-
-	    //Readjust Pov heading.
-            map.setPov(
-            {
-		        heading: newHeading,
-		        pitch: map.pov.pitch
-            });
-	    
-        } 
-        else 
-        {
-            map.setPov(
-            {
-                heading: ((map.pov.heading + magnitude) % 360),
-                pitch: map.pov.pitch
-            });
-        }
-    }
-}
-
-/*Adjust the pitch of the map.*/
-function processPitch(magnitude) 
-{
-    var newPitch = map.pov.pitch + magnitude;
-    if (newPitch < -90 || newPitch > 90)
-    {
-        return;
-    }
-
-    map.setPov(
-    {
-        heading: map.pov.heading,
-        pitch: newPitch
-    })
-}
-
-function moveLink(gestureDirection) {
-
-    var relative_heading;
-       var links_relative_headings = [links.length];
-       var i;
-   
-       //Store our heading withing 0 to 360.
-       if(map.pov.heading < 0){
-         relative_heading = map.pov.heading + 360;
-       }
-       else{
-           relative_heading = map.pov.heading;
-       }
-   
-       //Store link angles relative if our heading was 0 and make sure they are between 0 and 360.
-       for (i = 0; i < links.length; i++) {
-           links_relative_headings[i] = (links[i].heading - relative_heading);
-           while(links_relative_headings[i] < 0){
-               links_relative_headings[i] = links_relative_headings[i] + 360;
-           }
-       }
-       
-       /*Recognize and act according* to the direction of movement.*/
-       if (gestureDirection == "up"){
-           for(i = 0; i < links.length; i++){
-               if ( (0 <= links_relative_headings[i] && links_relative_headings[i] <= 45) ||
-                    (315 < links_relative_headings[i] && links_relative_headings[i] <= 360 )){
-                   processSVGestureData(links[i]);
-                   break;
-                   //first link that resides in the direction we are facing (relative north)
-               }
-           }
-       }
-   }
-
-function processSVGestureData(linkData) 
-{
-    map.setPano(linkData.pano);
-
-    map.setPov({
-        heading: linkData.heading, 
-        pitch: 0
-    });
-    map.setVisible(true);
-}
