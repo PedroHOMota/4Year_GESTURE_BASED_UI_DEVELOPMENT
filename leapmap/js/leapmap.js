@@ -31,7 +31,7 @@ function move(frame)
             }
         });
     }
-
+    lat 
     drawHands(frame);
     //Checando primeiro mao esquerda, pois o id da mesma é 0, se houver alguma mao detectada
     //A primeira posicao do array é certeza de nao ser nula
@@ -181,12 +181,14 @@ function zoom(frame, circleGesture)
 var streetView=false;
 var links;
 var panoIsMoving = false;
-
+lat = 53.277024;
+longe = -9.061486;
+zoomMap = 8;
 function initMap(str)
 {
     if(str)
     {
-        var fenway = new google.maps.LatLng(53.277024, -9.061486);
+        var fenway = new google.maps.LatLng(lat, longe);
         // Note: constructed panorama objects have visible: true
         // set by default.
         var panoOptions = {
@@ -210,9 +212,10 @@ function initMap(str)
     }
     else
     {
+        var fenway = new google.maps.LatLng(lat, longe);
         var mapOptions = {
-            zoom: 8,
-            center: new google.maps.LatLng(53.2784669, -9.0107282),
+            zoom: zoomMap,
+            center: fenway,
             mapTypeId: google.maps.MapTypeId.ROADMAP,
             mapTypeControlOptions: 
             {
@@ -224,6 +227,8 @@ function initMap(str)
             mapOptions);
     }
 }
+
+frameCounter = 0;
 function initialize() 
 {
     initMap(streetView);
@@ -234,13 +239,15 @@ function initialize()
         }, 
         function (frame) 
         {
-            if(frame.pointables.length==10)
+            if(frame.pointables.length==10 && frameCounter<1)
             {
+                frameCounter=120;
                 streetView= !streetView;
                 initMap(streetView);
-                //setTimeout({},4000);
+
             }
 
+            frameCounter--;
             if(streetView)
             {
                 moveStreetView(frame);
@@ -276,6 +283,7 @@ function closeMarker()
     infowindow.close();
     }catch(Exception){}
 }
+
 function isClockwise(frame, gesture) 
 {
     var clockwise = false;
@@ -285,6 +293,7 @@ function isClockwise(frame, gesture)
     if (dotProduct > 0) clockwise = true;
     return clockwise;
 }
+
 google.maps.event.addDomListener(window, 'load', initialize);
 
 function ChangeMap(op)
@@ -322,11 +331,14 @@ function ChangeMap(op)
     }
 }
 
-function NewPositionMap(lat,long,zoomMap, contentImg, contentTXT)
+function NewPositionMap(latt,longg,zoomMapp, contentImg, contentTXT)
 {
+    lat=latt;
+    longe=longg;
+    zoomMap=zoomMapp;
     map.setOptions({
         zoom: zoomMap,
-        center: new google.maps.LatLng(lat, long)
+        center: new google.maps.LatLng(lat, longe)
     });
     
     var contentString = "<img width='400' src='"+ contentImg + "'>" + "<br><br>" + contentTXT
@@ -340,7 +352,7 @@ function NewPositionMap(lat,long,zoomMap, contentImg, contentTXT)
 
     marker = new google.maps.Marker({
         animation: google.maps.Animation.DROP,
-        position: new google.maps.LatLng(lat, long),
+        position: new google.maps.LatLng(lat, longe),
         map: map
       });
 
@@ -406,32 +418,28 @@ function moveStreetView(frame)
 
 
         }
-
-        // if the right hand is not in a grab position, clear the separation
-        /*if (frame.hands.length > RIGHT_HAND && !isGripped(frame.hands[1]) && separationStart != null) {
-            separationStart = null;
-            // this does literally nothing because we are not doing right hand at all
-        }*/
     }
 }
 
-/*Handles clockwise movement based on a given magnitude.*/
-function moveClockwise(magnitude) {
+//Handles clockwise movement based on a given magnitude
+function moveClockwise(magnitude) 
+{
     if (isNaN(magnitude)){
         return;
     }
     processRotation(true, magnitude);
 }
 
-/*Handles counter-clockwise movement based on a given magnitude.*/
-function moveCounterClockwise(magnitude) {
+//Handles counter-clockwise movement based on a given magnitude
+function moveCounterClockwise(magnitude) 
+{
     if (isNaN(magnitude)){
         return;
     }
     processRotation(false, 0 - magnitude);
 }
 
-/*Function to change the rotation of the panorama*/
+//Function to change the rotation of the panorama
 function processRotation(direction, magnitude) 
 {
     calls =+ 1;
@@ -467,7 +475,7 @@ function processRotation(direction, magnitude)
     }
 }
 
-/*Adjust the pitch of the map.*/
+//Adjust the pitch of the map.
 function processPitch(magnitude) 
 {
     var newPitch = map.pov.pitch + magnitude;
@@ -490,10 +498,12 @@ function moveLink(gestureDirection) {
        var i;
    
        //Store our heading withing 0 to 360.
-       if(map.pov.heading < 0){
+       if(map.pov.heading < 0)
+       {
          relative_heading = map.pov.heading + 360;
        }
-       else{
+       else
+       {
            relative_heading = map.pov.heading;
        }
    
@@ -505,14 +515,13 @@ function moveLink(gestureDirection) {
            }
        }
        
-       /*Recognize and act according* to the direction of movement.*/
+       //Recognize and act according* to the direction of movement
        if (gestureDirection == "up"){
            for(i = 0; i < links.length; i++){
                if ( (0 <= links_relative_headings[i] && links_relative_headings[i] <= 45) ||
                     (315 < links_relative_headings[i] && links_relative_headings[i] <= 360 )){
                    processSVGestureData(links[i]);
                    break;
-                   //first link that resides in the direction we are facing (relative north)
                }
            }
        }
