@@ -3,6 +3,7 @@
 ![Screencast](Screencast/herokup.png)
 ## https://leapmapgmit.herokuapp.com/
 
+
 ## Overview
 The Leap Motion system recognizes and tracks hands and fingers. The device operates in an intimate proximity with high precision and tracking frame rate and reports discrete positions and motion.
 
@@ -17,6 +18,11 @@ The Leap Motion system employs a right-handed Cartesian coordinate system. The o
 
 ![Screencast](Screencast/Leap_Axes.png)
 
+## The project
+![Screencast](Screencast/theproject.png)
+The project is made up of the Leap Motion, Google Map & Street View, and HTML + JavaScript code for connecting the two of them. 
+
+The project allows a user to navigate Google Street View with only hand motions inside a web browser.
 
 
 ## How it works
@@ -44,11 +50,12 @@ Navigate the map and control the zoom.
 
 ![Screencast](Screencast/project.gif)
 
-### Online at the following address.
-![Screencast](Screencast/heroku.png)
-## https://leapmapgmit.herokuapp.com/
+![Screencast](Screencast/youtube.png)
+## https://youtu.be/g7kntVLHfjk
+
 
 ## Technology
+![Screencast](Screencast/architecture.png)
 
 ### Bootstrap
 Bootstrap is an open source toolkit for developing with HTML, CSS, and JS. Quickly prototype your ideas or build your entire app with our Sass variables and mixins, responsive grid system, extensive prebuilt components, and powerful plugins built on jQuery.
@@ -107,13 +114,6 @@ To move the map accordingly, at every frame we check how many pixels the palm mo
     } 
 ```
 
-## References
-- [Bootstrap](https://getbootstrap.com/)
-- [LEAPJS](https://github.com/leapmotion/leapjs)
-- [JavaScript SDK Documentation](https://developer.leapmotion.com/documentation/javascript/index.html)
-- [Heroku](https://www.heroku.com/)
-
-
 # Authors
 
 ### Alexander Souza
@@ -128,3 +128,10 @@ To move the map accordingly, at every frame we check how many pixels the palm mo
 - phomota@hotmail.com
 - https://github.com/PedroHOMota
 - www.linkedin.com/in/pedro-henrique-de-oliveira-mota-162307143/
+
+
+## References
+- [Bootstrap](https://getbootstrap.com/)
+- [LEAPJS](https://github.com/leapmotion/leapjs)
+- [JavaScript SDK Documentation](https://developer.leapmotion.com/documentation/javascript/index.html)
+- [Heroku](https://www.heroku.com/)
